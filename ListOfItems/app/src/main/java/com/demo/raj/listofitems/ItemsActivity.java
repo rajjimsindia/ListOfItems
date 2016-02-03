@@ -9,5 +9,13 @@ public class ItemsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_items);
+
+        // Add ItemsFragment to the ItemsActivity
+        if(savedInstanceState == null) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.container, new ItemsFragment())
+                    .commit();
+        }
     }
 }
