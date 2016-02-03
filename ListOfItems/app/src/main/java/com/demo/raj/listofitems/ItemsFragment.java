@@ -48,9 +48,17 @@ public class ItemsFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        // Start fetching the items
-        ItemsFetchTask task = new ItemsFetchTask();
-        task.execute();
+        if(!Utils.isConnected(getActivity())) {
+
+            Utils.showNetworkDialog(getActivity());
+
+            mProgressBar.setVisibility(View.GONE);
+        }
+        else {
+            // Start fetching the items
+            ItemsFetchTask task = new ItemsFetchTask();
+            task.execute();
+        }
     }
 
     @Nullable
@@ -116,6 +124,7 @@ public class ItemsFragment extends Fragment {
 
         @Override
         protected void onPostExecute(List<Item> s) {
+
         }
     }
 

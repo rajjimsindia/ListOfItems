@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">List  Of Items</string>
     <string name="no_data">No Data</string>
+    <string name="dlg_title">Whoa!</string>
+    <string name="dlg_msg">Seems like you are not connected to the internet. Please try again later.</string>
+    <string name="dlg_ok">OK</string>
 </resources>
