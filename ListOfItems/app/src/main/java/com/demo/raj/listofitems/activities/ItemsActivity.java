@@ -1,7 +1,10 @@
-package com.demo.raj.listofitems;
+package com.demo.raj.listofitems.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.demo.raj.listofitems.R;
+import com.demo.raj.listofitems.fragments.ItemsFragment;
 
 public class ItemsActivity extends AppCompatActivity {
 

@@ -1,4 +1,4 @@
-package com.demo.raj.listofitems;
+package com.demo.raj.listofitems.fragments;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -11,6 +11,11 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.demo.raj.listofitems.Item;
+import com.demo.raj.listofitems.R;
+import com.demo.raj.listofitems.Utils;
+import com.demo.raj.listofitems.adapters.ItemsAdapter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -41,6 +46,12 @@ public class ItemsFragment extends Fragment {
     // empty list view
     private TextView mEmptyView;
 
+    // list data
+    private List<Item> mListData;
+
+    // list adapter
+    private ItemsAdapter mItemsAdapter;
+
     // default constructor
     public ItemsFragment(){}
 
@@ -53,25 +64,47 @@ public class ItemsFragment extends Fragment {
             Utils.showNetworkDialog(getActivity());
 
             mProgressBar.setVisibility(View.GONE);
+            mEmptyView.setVisibility(View.VISIBLE);
         }
         else {
             // Start fetching the items
             ItemsFetchTask task = new ItemsFetchTask();
             task.execute();
+            Log.v(LOG_TAG, "AsyncTask executed...");
         }
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        // retain this fragment across configuration changes
+        setRetainInstance(true);
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.fragment_items, container, false);
+        View rootView = null;
 
-        mListView = (ListView)rootView.findViewById(R.id.items_list);
+        if(savedInstanceState == null) {
 
-        mProgressBar = (ProgressBar)rootView.findViewById(R.id.progress_bar);
+            rootView = inflater.inflate(R.layout.fragment_items, container, false);
 
-        mEmptyView = (TextView)rootView.findViewById(R.id.empty);
+            mListView = (ListView) rootView.findViewById(R.id.items_list);
+
+            mProgressBar = (ProgressBar) rootView.findViewById(R.id.progress_bar);
+
+            mEmptyView = (TextView) rootView.findViewById(R.id.empty);
+
+            mListData = new ArrayList<Item>();
+
+            mItemsAdapter = new ItemsAdapter(getActivity(), mListData);
+        }
+
+        // bind adapter to the list
+        mListView.setAdapter(mItemsAdapter);
 
         return rootView;
     }
@@ -125,6 +158,16 @@ public class ItemsFragment extends Fragment {
         @Override
         protected void onPostExecute(List<Item> s) {
 
+            Log.v(LOG_TAG, "AsyncTask finished...");
+            Log.v(LOG_TAG, "Data: " + s);
+
+            if(s != null) {
+                mListData.clear();
+                mListData.addAll(s);
+            }
+
+            mItemsAdapter.notifyDataSetChanged();
+            mProgressBar.setVisibility(View.GONE);
         }
     }
 
